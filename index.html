@@ -1374,54 +1374,16 @@
 
     .v-thumb {
       position: relative;
-      padding-top: 56.25%;
-    }
-
-    .v-thumb iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
-      height: 100%;
+      background: #000;
+    }
+
+    .v-thumb video {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 420px;
       object-fit: cover;
-    }
-
-    .v-thumb .play-ov {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, .48);
-      color: #fff;
-      opacity: 0;
-      transition: var(--ease)
-    }
-
-    .v-thumb:hover .play-ov {
-      opacity: 1
-    }
-
-    .play-big {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, .18);
-      backdrop-filter: blur(8px);
-      border: 3px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-      cursor: pointer;
-      transition: var(--ease)
-    }
-
-    .play-big:hover {
-      background: var(--green);
-      border-color: var(--green);
-      transform: scale(1.1)
     }
 
     .v-body {
@@ -3154,17 +3116,14 @@
         <p>Health education, product demos & patient stories that build trust and drive sales</p>
       </div>
       <div class="vid-grid fade-in">
-        <!-- Featured -->
+
+        <!-- ── FEATURED VIDEO (Bug Fix #1: added missing closing quote on src) ── -->
         <div class="v-card feat">
           <div class="v-thumb">
-            <video controls width="100%" height="100%">
-              <source src="videos/Medical_Store_Product_Demo_Video.mp4 type="video/mp4">
+            <video controls>
+              <source src="videos/Medical_Store_Product_Demo_Video.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
-            <div class="play-ov">
-              <div class="play-big"><i class="fas fa-play"></i></div>
-              <div style="margin-top:.75rem;font-size:.85rem;opacity:.8">Watch Full Video</div>
-            </div>
           </div>
           <div class="v-body">
             <div class="v-type">🎬 Featured Product Demo</div>
@@ -3175,15 +3134,14 @@
                 3.2K likes</span><span><i class="fas fa-clock"></i> 12 min</span></div>
           </div>
         </div>
-        <!-- Video 2 -->
+
+        <!-- ── VIDEO 2 (Bug Fix #2: removed stray title="..." ></iframe> after </video>) ── -->
         <div class="v-card">
           <div class="v-thumb">
-            <video controls width="100%" height="100%">
+            <video controls>
               <source src="videos/Healthcare_Video_Vitamin_D_Deficiency_India.mp4" type="video/mp4">
-            </video> title="Vitamin video"></iframe>
-            <div class="play-ov">
-              <div class="play-big"><i class="fas fa-play"></i></div>
-            </div>
+              Your browser does not support the video tag.
+            </video>
           </div>
           <div class="v-body">
             <div class="v-type">💊 Product Education</div>
@@ -3194,15 +3152,14 @@
                 min</span></div>
           </div>
         </div>
-        <!-- Video 3 -->
+
+        <!-- ── VIDEO 3 (Bug Fix #3: removed stray title="..." ></iframe> after </video>) ── -->
         <div class="v-card">
           <div class="v-thumb">
-            <video controls width="100%" height="100%">
+            <video controls>
               <source src="videos/MediCare_Plus_Customer_Testimonial_Video.mp4" type="video/mp4">
-            </video> title="Health tips"></iframe>
-            <div class="play-ov">
-              <div class="play-big"><i class="fas fa-play"></i></div>
-            </div>
+              Your browser does not support the video tag.
+            </video>
           </div>
           <div class="v-body">
             <div class="v-type">🌿 Wellness Tips</div>
@@ -3213,6 +3170,7 @@
                 min</span></div>
           </div>
         </div>
+
       </div>
       <!-- Video stats -->
       <div class="vid-stats fade-in">
@@ -4077,16 +4035,14 @@
     /* ── RENDER PRODUCTS ── */
     function filterProd(cat) {
       document.querySelectorAll('.prod-tab').forEach(t => {
-        const matches = t.textContent.toLowerCase().includes(cat === 'all' ? 'all' : cat) ||
-          (cat === 'all' && t.textContent.toLowerCase() === 'all products');
-        t.classList.toggle('on', matches ||
+        t.classList.toggle('on',
+          (cat === 'all' && t.textContent === 'All Products') ||
           (cat === 'tablets' && t.textContent === 'Tablets') ||
           (cat === 'vitamins' && t.textContent === 'Vitamins') ||
           (cat === 'devices' && t.textContent === 'Devices') ||
           (cat === 'syrups' && t.textContent === 'Syrups') ||
           (cat === 'skincare' && t.textContent === 'Skincare') ||
-          (cat === 'baby' && t.textContent === 'Baby Care') ||
-          (cat === 'all' && t.textContent === 'All Products'));
+          (cat === 'baby' && t.textContent === 'Baby Care'));
       });
       const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === cat);
       const g = document.getElementById('prod-grid');
@@ -4330,19 +4286,6 @@
     document.querySelectorAll('.fade-in,.sl-l,.sl-r').forEach(el => io.observe(el));
 
     /* ── SKILL BARS ── */
-    const io2 = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.querySelectorAll('.sk-fill').forEach(b => { b.style.width = b.dataset.w + '%' });
-          io2.unobserve(e.target);
-        }
-      });
-    }, { threshold: .3 });
-    document.querySelectorAll('.sk-fill').forEach(b => {
-      const wrapper = b.closest('[class*="fade"]') || b.parentElement;
-      if (wrapper) io2.observe(wrapper);
-    });
-    // Also directly observe sk-fill
     document.querySelectorAll('.sk-fill').forEach(b => {
       const obs = new IntersectionObserver(en => {
         en.forEach(e => { if (e.isIntersecting) { e.target.style.width = e.target.dataset.w + '%'; obs.unobserve(e.target) } });
